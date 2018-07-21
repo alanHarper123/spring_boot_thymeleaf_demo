@@ -1,4 +1,4 @@
-package com.qiujintao.demo;
+package com.qiujintao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
