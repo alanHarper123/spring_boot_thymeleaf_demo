@@ -3,7 +3,6 @@
 
 ### STS ###
 .apt_generated
-.classpath
 .factorypath
 .springBeans
 .sts4-cache
