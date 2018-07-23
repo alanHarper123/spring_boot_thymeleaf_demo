@@ -1,10 +1,15 @@
 package com.qiujintao.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -36,35 +41,50 @@ public class UserController {
 		return map;
 	}
 	@GetMapping("create-user")
-	public ModelAndView createUserView(Model model) {
+	public ModelAndView createUserView() {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("user", new User());
 		mav.addObject("allProfiles", getProfiles());
 		mav.setViewName("user-creation");
 		return mav;
 	}
-	
+
 	@PostMapping("create-user")
-	public ModelAndView createUser(ModelAndView mav, @Valid User user, BindingResult result) {
+	public String createUser(Model mav,@Valid User user, BindingResult result) {
 		if(result.hasErrors()) {
 			LOGGER.info("Validation errors while submitting form.");
-			mav.setViewName("user-creation");
-			mav.addObject("user", user);
-			mav.addObject("allProfiles", getProfiles());
-			return mav;
+			mav.addAttribute("allProfiles", getProfiles());
+			return "user-creation";
 		}
 		userService.addUser(user);
-		mav.addObject("allUsers",userService.getAllUsers());
-		mav.setViewName("user-info");
+		mav.addAttribute("allUsers",userService.getAllUsers());
+		mav.addAttribute("userImge", getUserImage());
 		LOGGER.info("Form submitted successfully");
-		return mav;
+		return "user-info";
 	}
-	
+
 	private List<String> getProfiles(){
 		List<String> list = new ArrayList<>();
 		list.add("Developer");
 		list.add("Manager");
 		list.add("Director");
 		return list;
+	}
+	private String getUserImage() {
+		BufferedImage bufferedImage = null;
+		byte[] imageByte = null;
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		try {
+			bufferedImage = ImageIO.read(new File("F:\\codeJava\\tmall_ssm\\src\\main\\webapp\\img\\lunbo\\3.jpg"));
+			ImageIO.write(bufferedImage, "jpg", bao);
+			bao.flush();
+			imageByte = bao.toByteArray();
+			bao.close();
+		} catch (Exception e) {
+			System.out.println(new RuntimeException(e));
+		}finally {
+
+		}
+		return Base64.getEncoder().encodeToString(imageByte);
 	}
 }

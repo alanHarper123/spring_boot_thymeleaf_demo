@@ -7,6 +7,7 @@
 </head>
 <body>
 	<h1 th:text="#{app.user-details}">Details</h1>
+	<img alt="error imge not found" th:src="@{'data:image;base64,'+${userImge}}"></img>
 	<table>
 		<tr>
 			<th th:text="#{user.id}"></th>
